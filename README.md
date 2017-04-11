@@ -1,9 +1,9 @@
 
 # Kafka-Testing
 A library allowing you to run a Kafka cluster within your JVM! 
-The cluster can be composed of:
+The cluster is composed of:
 * 1(default) or more brokers (!mandatory)
-* 1 Zookeeper instance
+* 1 Zookeeper instance (!mandatory)
 * Schema Registry and its default compatibility policy
 * Kafka Connect workers.
 
