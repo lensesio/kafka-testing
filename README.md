@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/Landoop/kafka-testing.svg?branch=master)](https://travis-ci.org/Landoop/kafka-testing) 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing_2.11)
 
 # Kafka Unit Testing
 
