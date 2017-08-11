@@ -8,14 +8,14 @@ jdk:
 # sudo: true
 
 # Enable if you want to use gradlew
-before_install:
-  - chmod +x gradlew
+#before_install:
+#  - chmod +x gradlew
 
 # If you omit install, travis will always run gradle assemble
 install: echo "skip 'gradle assembly'"
 
 script:
- - ./gradlew clean build
+ - gradle clean build
 
 cache:
   directories:
