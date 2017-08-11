@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerRecord
 
 class BasicTest extends ClusterTestingCapabilities {
 
-  private def createAvroRecord = {
+  private val createAvroRecord = {
     val userSchema = "{\"namespace\": \"example.avro\", \"type\": \"record\", " + "\"name\": \"User\"," + "\"fields\": [{\"name\": \"name\", \"type\": \"string\"}]}"
     val parser = new Schema.Parser
     val schema = parser.parse(userSchema)
@@ -17,11 +17,11 @@ class BasicTest extends ClusterTestingCapabilities {
 
   "KCluster" should {
     "start up and be able to handle avro records being sent " in {
-      val topic = "testAvro"
+      val topic = "testAvro" + System.currentTimeMillis()
       val avroRecord = createAvroRecord
       val objects = Array[AnyRef](avroRecord)
       val producerProps = stringAvroProducerProps
-      val producer = createProducer[String,Any](producerProps)
+      val producer = createProducer[String, Any](producerProps)
 
       for (o <- objects) {
         val message = new ProducerRecord[String, Any](topic, o)
@@ -33,16 +33,16 @@ class BasicTest extends ClusterTestingCapabilities {
       objects.toSeq shouldBe records
     }
 
-    "handle the avro new producer" in {
-      val topic = "testAvro"
+    "write and read avro records" in {
+      val topic = "testAvro" + System.currentTimeMillis()
       val avroRecord = createAvroRecord
       val objects = Array[Any](avroRecord, true, 130, 345L, 1.23f, 2.34d, "abc", "def".getBytes)
       val producerProps = stringAvroProducerProps
-      val producer = createProducer[String,Any](producerProps)
+      val producer = createProducer[String, Any](producerProps)
       for (o <- objects) {
         producer.send(new ProducerRecord[String, Any](topic, o))
       }
-      val consumerProps = stringAvroConsumerProps()
+      val consumerProps = stringAvroConsumerProps("group" + System.currentTimeMillis())
       val consumer = createStringAvroConsumer(consumerProps)
       val records = consumeStringAvro(consumer, topic, objects.length)
       objects.deep shouldBe records.toArray.deep

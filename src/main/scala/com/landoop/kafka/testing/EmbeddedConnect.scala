@@ -1,6 +1,5 @@
 package com.landoop.kafka.testing
 
-
 import org.apache.kafka.common.utils.SystemTime
 import org.apache.kafka.common.utils.Time
 import org.apache.kafka.common.utils.Utils

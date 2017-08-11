@@ -20,7 +20,7 @@ apply plugin: 'net.researchgate.release'
 allprojects {
     group = 'com.landoop'
     version = version
-    description = "Small utility lib to spin up Kafka + Schema Registry in the JVM and help with your testing"
+    description = "Kafka Unit Testing: Embeded broker, ZK, SR, Connect services"
 
     apply plugin: 'scala'
     apply plugin: 'maven'
@@ -31,19 +31,17 @@ allprojects {
     ext {
         scalaMajorVersion = '2.11'
         scala = '2.11.8'
-        scalaCheck = '1.11.1'
-        kafkaVersion = "0.10.2.0"
-        confluentVersion = "3.2.0"
-        scalaTest = '2.2.6'
+        scalaCheck = '1.13.5'
+        kafkaVersion = "0.10.2.1-cp2"
+        confluentVersion = "3.2.2"
+        scalaTest = '3.0.3'
         junitVersion = '4.12'
-        mockitoVersion = '2.7.13'
+        mockitoVersion = '2.8.47'
         avroVersion = '1.8.1'
         avro4sVersion = "1.6.2"
-        scalaLoggingVersion = '3.5.0'
-        bouncycastleVersion = "1.54"
-        apacheDirectoryVersion = "2.0.0-M22"
-        apacheDirectoryApiVersion = "1.0.0-M33"
-        configVersion = "1.2.1"
+        scalaLoggingVersion = '3.7.2'
+        bouncycastleVersion = "1.57"
+        apacheDirectoryVersion = "2.0.0-M24"
     }
 
     repositories {
@@ -56,7 +54,6 @@ allprojects {
     configurations {
         provided
         compile.extendsFrom provided
-
     }
 
     dependencies {
@@ -145,7 +142,6 @@ allprojects {
 
     configurations {
         tests
-
     }
 
     task sourcesJar(type: Jar) {
@@ -215,12 +211,12 @@ allprojects {
                             developer {
                                 id = 'stheppi'
                                 name = 'Stefan Bocutiu'
-                                email = 'stefan@datamountaineer.com'
+                                email = 'stefan@landoop.com'
                             }
                             developer {
                                 id = 'Antwnis'
                                 name = 'Antonios Chalkiopoulos'
-                                email = 'antonios@datamountaineer.com'
+                                email = 'antonios@landoop.com'
                             }
                         }
                     }

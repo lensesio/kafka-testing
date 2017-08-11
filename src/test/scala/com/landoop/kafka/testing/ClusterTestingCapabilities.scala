@@ -8,6 +8,7 @@ import java.util
 import java.util.Properties
 import javax.management.remote.{JMXConnectorServer, JMXConnectorServerFactory, JMXServiceURL}
 
+import com.typesafe.scalalogging.StrictLogging
 import io.confluent.kafka.serializers.{KafkaAvroDeserializer, KafkaAvroSerializer}
 import org.apache.kafka.clients.consumer.{Consumer, ConsumerRecord, KafkaConsumer}
 import org.apache.kafka.clients.producer.{KafkaProducer, ProducerConfig}
@@ -18,7 +19,7 @@ import scala.collection.JavaConversions._
 import scala.collection.JavaConverters._
 import scala.collection.mutable
 
-trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAfterAll {
+trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAfterAll with StrictLogging {
 
   System.setProperty("http.nonProxyHosts", "localhost|0.0.0.0|127.0.0.1")
 
@@ -28,34 +29,6 @@ trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAf
   val kafkaCluster: KCluster = new KCluster()
 
   var jmxConnectorServer: Option[JMXConnectorServer] = None
-
-  /**
-    * Run this method to enable JMX statistics across all embedded apps
-    *
-    * @param port - The JMX port to enable RMI stats
-    */
-  def loadJMXAgent(port: Int, retries: Int = 5): Unit = {
-    var retry = retries > 0
-    if (retry) {
-      if (isPortInUse(port)) {
-        println(s"JMX Port $port already in use")
-        Thread.sleep(2000)
-        loadJMXAgent(port, retries - 1)
-      } else {
-        println(s"Starting JMX Port of embedded Kafka system $port")
-        val mbeanServer = ManagementFactory.getPlatformMBeanServer
-        registry = LocateRegistry.createRegistry(port)
-        val env = mutable.Map[String, String]()
-        env += ("com.sun.management.jmxremote.authenticate" -> "false")
-        env += ("com.sun.management.jmxremote.ssl" -> "false")
-        val jmxServiceURL = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://:" + port + "/jmxrmi")
-        jmxConnectorServer = Some(JMXConnectorServerFactory.newJMXConnectorServer(jmxServiceURL, env.asJava, mbeanServer))
-        jmxConnectorServer.get.start()
-        retry = false
-        Thread.sleep(2000)
-      }
-    }
-  }
 
   def startEmbeddedConnect(workerConfig: Properties, connectorConfigs: List[Properties]): Unit = {
     kafkaCluster.startEmbeddedConnect(workerConfig, connectorConfigs)
@@ -72,16 +45,58 @@ trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAf
   }
 
   protected override def afterAll(): Unit = {
-    println("Cleaning embedded cluster")
-    if (jmxConnectorServer.isDefined) {
-      jmxConnectorServer.get.stop()
-      registry.list().foreach(registry.unbind)
-      UnicastRemoteObject.unexportObject(registry, true)
-    }
+    logger.info("Cleaning embedded cluster. Server = " + jmxConnectorServer)
     try {
+      if (jmxConnectorServer.isDefined) {
+        jmxConnectorServer.get.stop()
+      }
+      if (Option(registry).isDefined) {
+        registry.list().foreach { s =>
+          registry.unbind(s)
+        }
+        UnicastRemoteObject.unexportObject(registry, true)
+      }
       kafkaCluster.close()
     } catch {
-      case e:Throwable => // ignore
+      case e: Throwable =>
+        logger.error(
+          s"""|
+              | ERROR in closing Embedded Kafka cluster $e
+          """.stripMargin)
+    }
+  }
+
+  /**
+    * Run this method to enable JMX statistics across all embedded apps
+    *
+    * @param port - The JMX port to enable RMI stats
+    */
+  def loadJMXAgent(port: Int, retries: Int = 10): Unit = {
+    var retry = retries > 0
+    if (retry) {
+      if (isPortInUse(port)) {
+        logger.info(s"JMX Port $port already in use")
+        Thread.sleep(2000)
+        loadJMXAgent(port, retries - 1)
+      } else {
+        logger.info(s"Starting JMX Port of embedded Kafka system $port")
+        registry = LocateRegistry.createRegistry(port)
+        val env = mutable.Map[String, String]()
+        env += ("com.sun.management.jmxremote.authenticate" -> "false")
+        env += ("com.sun.management.jmxremote.ssl" -> "false")
+        val jmxServiceURL = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://:" + port + "/jmxrmi")
+        val mbeanServer = ManagementFactory.getPlatformMBeanServer
+        jmxConnectorServer = Some(JMXConnectorServerFactory.newJMXConnectorServer(jmxServiceURL, env.asJava, mbeanServer))
+        jmxConnectorServer.get.start()
+        retry = false
+        Thread.sleep(2000)
+      }
+    }
+    if (retries == 0) {
+      logger.error(
+        """|
+           | Could not load JMX agent
+        """.stripMargin)
     }
   }
 
@@ -89,6 +104,15 @@ trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAf
   def avroAvroProducerProps: Properties = {
     val props = new Properties
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[KafkaAvroSerializer])
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[KafkaAvroSerializer])
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaCluster.BrokersList)
+    props.put(SCHEMA_REGISTRY_URL, kafkaCluster.SchemaRegistryService.get.Endpoint)
+    props
+  }
+
+  def intAvroProducerProps: Properties = {
+    val props = new Properties
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[IntegerSerializer])
     props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[KafkaAvroSerializer])
     props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaCluster.BrokersList)
     props.put(SCHEMA_REGISTRY_URL, kafkaCluster.SchemaRegistryService.get.Endpoint)
@@ -113,6 +137,16 @@ trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAf
     props
   }
 
+
+  def avroStringProducerProps: Properties = {
+    val props = new Properties
+    props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
+    props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[KafkaAvroSerializer])
+    props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaCluster.BrokersList)
+    props.put(SCHEMA_REGISTRY_URL, kafkaCluster.SchemaRegistryService.get.Endpoint)
+    props
+  }
+
   def stringstringProducerProps: Properties = {
     val props = new Properties
     props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, classOf[StringSerializer])
@@ -131,7 +165,7 @@ trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAf
     props.put("group.id", group)
     props.put("session.timeout.ms", "6000") // default value of group.min.session.timeout.ms.
     props.put("heartbeat.interval.ms", "2000")
-    props.put("auto.commit.interval.ms", "1000")
+    props.put("enable.auto.commit", "false")
     props.put("auto.offset.reset", "earliest")
     props.put("key.deserializer", classOf[StringDeserializer])
     props.put("value.deserializer", classOf[KafkaAvroDeserializer])
@@ -145,7 +179,7 @@ trait ClusterTestingCapabilities extends WordSpec with Matchers with BeforeAndAf
     props.put("group.id", group)
     props.put("session.timeout.ms", "6000") // default value of group.min.session.timeout.ms.
     props.put("heartbeat.interval.ms", "2000")
-    props.put("auto.commit.interval.ms", "1000")
+    props.put("enable.auto.commit", "false")
     props.put("auto.offset.reset", "earliest")
     props.put("key.deserializer", classOf[StringDeserializer])
     props.put("value.deserializer", classOf[StringDeserializer])

@@ -7,9 +7,10 @@ Allows you to start and stop for unit testing applications that communicate with
 
 ## Versions
 
-| kafka-testing | Kafka broker            | Zookeeper | Schema Registry | Kafka Connect |
-|---------------|-------------------------|-----------| ----------------| --------------|
-| 0.1           | kafka_2.11 : 0.10.2.0   | 3.4.6     |           3.2.0 |         3.2.0 |  
+| kafka-testing | Kafka broker              | Zookeeper | Schema Registry | Kafka Connect |
+|---------------|---------------------------|-----------| ----------------| --------------|
+| 0.1           | kafka_2.11 : 0.10.2.0     | 3.4.6     |           3.2.0 |         3.2.0 |
+| 0.2           | kafka_2.11 : 0.10.2.1-cp2 | 3.4.6     |           3.2.2 |         3.2.2 |
 
 ## Maven central
 
@@ -17,16 +18,16 @@ Allows you to start and stop for unit testing applications that communicate with
 <dependency>
   <groupId>com.landoop</groupId>
   <artifactId>kafka-testing_2.11</artifactId>
-  <version>0.1</version>
+  <version>0.2</version>
 </dependency>
 ```
 
 ```gradle
-compile 'com.landoop:kafka-testing_2.11:0.1
+compile 'com.landoop:kafka-testing_2.11:0.2
 ```
 
 ```sbt
-libraryDependencies += "com.landoop" %% "kafka-testing" % "0.1"
+libraryDependencies += "com.landoop" %% "kafka-testing" % "0.2"
 ```
 
 ## Using it
