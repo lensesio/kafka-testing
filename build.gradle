@@ -191,12 +191,12 @@ allprojects {
                         name project.name
                         description project.description
                         packaging 'jar'
-                        url 'https://github.com/datamountaineer/kafka-connect-common'
+                        url 'https://github.com/landoop/kafka-testing'
 
                         scm {
-                            connection 'scm:git:https://github.com/datamountaineer/kafka-connect-common.git'
-                            developerConnection 'scm:git:git@github.com:datamountaineer/kafka-connect-common.git'
-                            url 'https://github.com/datamountaineer/kafka-connect-common.git'
+                            connection 'scm:git:https://github.com/landoop/kafka-testing.git'
+                            developerConnection 'scm:git:git@github.com:landoop/kafka-testing.git'
+                            url 'https://github.com/landoop/kafka-testing.git'
                         }
 
                         licenses {
