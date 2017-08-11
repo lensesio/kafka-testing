@@ -1,30 +1,35 @@
+[![Build Status](https://travis-ci.org/Landoop/kafka-testing.svg?branch=master)](https://travis-ci.org/Landoop/kafka-testing) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing)
 
-# Kafka-Testing
-A library allowing you to run a Kafka cluster within your JVM! 
-The cluster is composed of:
-* 1(default) or more brokers (!mandatory)
-* 1 Zookeeper instance (!mandatory)
-* Schema Registry and its default compatibility policy
-* Kafka Connect workers.
+# Kafka Unit Testing
 
+Allows you to start and stop for unit testing applications that communicate with Kafka `one or more Kafka brokers + a ZooKeeper instance + a Schema Registry instance + a Kafka Connect instance`
 
-### Import it into your project
-```json
-//maven
+## Versions
+
+| kafka-testing | Kafka broker            | Zookeeper | Schema Registry | Kafka Connect |
+|---------------|-------------------------|-----------| ----------------| --------------|
+| 0.1           | kafka_2.11 : 0.10.2.0   | 3.4.6     |           3.2.0 |         3.2.0 |  
+
+## Maven central
+
+```xml
 <dependency>
   <groupId>com.landoop</groupId>
   <artifactId>kafka-testing_2.11</artifactId>
   <version>0.1</version>
 </dependency>
+```
 
-
-//gradle
+```gradle
 compile 'com.landoop:kafka-testing_2.11:0.1
+```
 
-//sbt
+```sbt
 libraryDependencies += "com.landoop" %% "kafka-testing" % "0.1"
 ```
-###How to use it:
+
+## Using it
 
 ```scala
  val kafkaCluster: KCluster = new KCluster()
@@ -46,10 +51,20 @@ libraryDependencies += "com.landoop" %% "kafka-testing" % "0.1"
  kafkaCluster.startEmbeddedConnect(...)
 ```
 
-Simple! 
-Happy testing...
+## License
 
-## Release History
+```
+Copyright 2017 Landoop
 
-0.1 - first cut (2017-04-11)
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
 
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
