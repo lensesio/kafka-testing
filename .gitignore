@@ -1,0 +1,15 @@
+.iml
+*.log
+.cache
+*.class
+.history
+.scala_dependencies
+dist/
+.idea/
+build/
+target/
+.gradle/
+lib_managed/
+src_managed/
+project/boot/
+.worksheet.lib/
