@@ -6,9 +6,9 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.github.maiflai:gradle-scalatest:0.14'
+        classpath 'com.github.maiflai:gradle-scalatest:0.16'
         classpath 'io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.5.3'
-        classpath 'net.researchgate:gradle-release:2.3.4'
+        classpath 'net.researchgate:gradle-release:2.4.0'
     }
 }
 
@@ -29,10 +29,10 @@ allprojects {
     targetCompatibility = 1.8
 
     ext {
-        scalaMajorVersion = '2.11'
-        scala = '2.11.8'
+        scalaMajorVersion = '2.12'
+        scala = '2.12.3'
         scalaCheck = '1.13.5'
-        kafkaVersion = "0.10.2.1-cp2"
+        kafkaVersion = "0.10.2.1"
         confluentVersion = "3.2.2"
         scalaTest = '3.0.3'
         junitVersion = '4.12'
