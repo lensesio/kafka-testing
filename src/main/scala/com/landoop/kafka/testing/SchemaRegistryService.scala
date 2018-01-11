@@ -7,8 +7,7 @@ import com.typesafe.scalalogging.StrictLogging
 import io.confluent.kafka.schemaregistry.avro.AvroCompatibilityLevel
 import io.confluent.kafka.schemaregistry.client.rest.RestService
 import io.confluent.kafka.schemaregistry.rest.{SchemaRegistryConfig, SchemaRegistryRestApplication}
-import io.confluent.kafka.schemaregistry.storage.SchemaRegistry
-import io.confluent.kafka.schemaregistry.zookeeper.SchemaRegistryIdentity
+import io.confluent.kafka.schemaregistry.storage.{SchemaRegistry, SchemaRegistryIdentity}
 import org.eclipse.jetty.server.Server
 
 class SchemaRegistryService(val port: Int,

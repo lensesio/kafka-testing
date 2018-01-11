@@ -3,7 +3,7 @@ package com.landoop.kafka.testing
 import org.apache.kafka.common.utils.SystemTime
 import org.apache.kafka.common.utils.Time
 import org.apache.kafka.common.utils.Utils
-import org.apache.kafka.connect.runtime.{ConnectorConfig, ConnectorFactory, Herder, Worker}
+import org.apache.kafka.connect.runtime.{ConnectorConfig, Herder, Worker}
 import org.apache.kafka.connect.runtime.distributed.DistributedConfig
 import org.apache.kafka.connect.runtime.distributed.DistributedHerder
 import org.apache.kafka.connect.runtime.rest.entities.ConnectorInfo
@@ -16,15 +16,14 @@ import java.util.concurrent.ExecutionException
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.TimeoutException
 import java.util.concurrent.atomic.AtomicBoolean
-
+import scala.collection.JavaConversions._
 import com.typesafe.scalalogging.StrictLogging
+import org.apache.kafka.connect.runtime.isolation.Plugins
 
 /**
   * Embedded Kafka Connect server as per KIP-26
   */
 case class EmbeddedConnect(workerConfig: Properties, connectorConfigs: List[Properties]) extends StrictLogging {
-
-  val connectorFactory = new ConnectorFactory()
 
   private val REQUEST_TIMEOUT_MS = 120000
   private val startLatch: CountDownLatch = new CountDownLatch(1)
@@ -43,7 +42,7 @@ case class EmbeddedConnect(workerConfig: Properties, connectorConfigs: List[Prop
   //not sure if this is going to work but because we don't have advertised url we can get at least a fairly random
   val workerId: String = UUID.randomUUID().toString
   println("---> " + config.toString)
-  worker = new Worker(workerId, time, connectorFactory, config, offsetBackingStore)
+  worker = new Worker(workerId, time, new Plugins(Map.empty[String, String]), config, offsetBackingStore)
 
   val statusBackingStore: StatusBackingStore = new KafkaStatusBackingStore(time, worker.getInternalValueConverter)
   statusBackingStore.configure(config)
