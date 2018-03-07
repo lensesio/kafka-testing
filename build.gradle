@@ -32,7 +32,7 @@ allprojects {
         scalaMajorVersion = '2.11'
         scala = '2.11.11'
         scalaCheck = '1.13.5'
-        kafkaVersion = "1.0.0"
+        kafkaVersion = "1.0.1"
         confluentVersion = "4.0.0"
         scalaTest = '3.0.3'
         junitVersion = '4.12'
