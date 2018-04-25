@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Landoop/kafka-testing.svg?branch=master)](https://travis-ci.org/Landoop/kafka-testing) 
 
 [<img src="https://img.shields.io/maven-central/v/com.landoop/kafka-testing.svg?label=latest%20release%20for%20Scala%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kafka-testing_2.11%22)
-[<img src="https://img.shields.io/maven-central/v/com.landoop/kafka-testing.svg?label=latest%20release%20for%20Scala%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kafka-testing_2.12%22)
+[<img src="https://img.shields.io/maven-central/v/com.landoop/kafka-testing.svg?label=latest%20release%20for%20Scala%202.12"/>](http://search.maven.org/#search%7Cga%7C1%7Ckafka-testing_2.12)
 
 # Kafka Unit Testing
 
