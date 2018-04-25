@@ -50,7 +50,7 @@ case class EmbeddedConnect(workerConfig: Properties, connectorConfigs: List[Prop
   val configBackingStore: ConfigBackingStore = new KafkaConfigBackingStore(worker.getInternalValueConverter, config)
 
   //advertisedUrl = "" as we don't have the rest server - hopefully this will not break anything
-  herder = new DistributedHerder(config, time, worker, statusBackingStore, configBackingStore, "")
+  herder = new DistributedHerder(config, time, worker, "KafkaCluster1",statusBackingStore, configBackingStore, "")
 
   def start(): Unit = {
     try {
