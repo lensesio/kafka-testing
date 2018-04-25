@@ -1,6 +1,8 @@
 [![Build Status](https://travis-ci.org/Landoop/kafka-testing.svg?branch=master)](https://travis-ci.org/Landoop/kafka-testing) 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.landoop/kafka-testing_2.11)
 
+[<img src="https://img.shields.io/maven-central/v/com.landoop/kafka-testing.svg?label=latest%20release%20for%20Scala%202.11"/>](http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22kafka-testing_2.11%22)
+
 # Kafka Unit Testing
 
 Allows you to start and stop for unit testing applications that communicate with Kafka `one or more Kafka brokers + a ZooKeeper instance + a Schema Registry instance + a Kafka Connect instance`
