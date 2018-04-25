@@ -12,6 +12,7 @@ Allows you to start and stop for unit testing applications that communicate with
 | 0.1           | kafka_2.11 : 0.10.2.0     | 3.4.6     |           3.2.0 |         3.2.0 |
 | 0.2           | kafka_2.11 : 0.10.2.1-cp2 | 3.4.6     |           3.2.2 |         3.2.2 |
 | 0.2           | kafka_2.12 : 0.10.2.1     | 3.4.6     |           3.2.2 |         3.2.2 |
+| 2.1           | 1.1                       | 3.4.6     |           4.1.0 |         1.1.0 |
 
 ## Maven central
 
