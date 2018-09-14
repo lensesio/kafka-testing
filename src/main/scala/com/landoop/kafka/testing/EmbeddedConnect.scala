@@ -47,7 +47,7 @@ case class EmbeddedConnect(workerConfig: Properties, connectorConfigs: List[Prop
   val statusBackingStore: StatusBackingStore = new KafkaStatusBackingStore(time, worker.getInternalValueConverter)
   statusBackingStore.configure(config)
 
-  val configBackingStore: ConfigBackingStore = new KafkaConfigBackingStore(worker.getInternalValueConverter, config)
+  val configBackingStore: ConfigBackingStore = new KafkaConfigBackingStore(worker.getInternalValueConverter, config, worker.configTransformer())
 
   //advertisedUrl = "" as we don't have the rest server - hopefully this will not break anything
   herder = new DistributedHerder(config, time, worker, "KafkaCluster1",statusBackingStore, configBackingStore, "")
