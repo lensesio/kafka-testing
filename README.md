@@ -22,17 +22,28 @@ Allows you to start and stop for unit testing applications that communicate with
 <dependency>
   <groupId>com.landoop</groupId>
   <artifactId>kafka-testing_2.11</artifactId>
-  <version>0.2</version>
+  <version>2.1</version>
 </dependency>
 ```
 
 ```gradle
-compile 'com.landoop:kafka-testing_2.11:0.2
+compile 'com.landoop:kafka-testing_2.11:2.1
+
 ```
 
 ```sbt
-libraryDependencies += "com.landoop" %% "kafka-testing" % "0.2"
+libraryDependencies += "com.landoop" %% "kafka-testing" % "2.1"
 ```
+
+### Required additional dependencies
+This library requires Apache Kafka test-jars within the scope (requirement of KCluster)
+```sbt
+libraryDependencies ++= Seq(
+  "org.apache.kafka" %% "kafka" % "1.1.0" % Compile classifier "test",
+  "org.apache.kafka" %% "kafka" % "1.1.0" % Compile,
+  "org.apache.kafka" % "kafka-clients" % "1.1.0" % Compile classifier "test",
+  "org.apache.kafka" % "kafka-clients" % "1.1.0" % Compile
+)```
 
 ## Using it
 
@@ -43,11 +54,11 @@ libraryDependencies += "com.landoop" %% "kafka-testing" % "0.2"
  val brokers = kafkaCluster.BrokersList
  
  //get schema registry client
- val schemaRegistryClient = kafkaCluster.SchemaRegistryService.get.RestClient
+ val schemaRegistryClient = kafkaCluster.SchemaRegistryService.get.restClient
  
  
  //get schema registry endpoint
- val schemaRegistryClient = kafkaCluster.SchemaRegistryService.get.Endpoint
+ val schemaRegistryEndpoint = kafkaCluster.SchemaRegistryService.get.Endpoint
  
  //get Zookeeper Client
  val zkClient = kafkaCluster.ZKClient
